@@ -18,6 +18,7 @@ jobs:
         - name: Pull
           run: git pull
     Test:
+        needs:  Pull
         defaults:
             run:
                 working-directory: /home/dietpi/ALS-Application/src-tauri/
