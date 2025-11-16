@@ -25,6 +25,6 @@ jobs:
         runs-on: self-hosted
         steps:
         - name: Build
-          run: cargo build --verbose
+          run: /home/dietpi/.cargo/bin/cargo build --verbose
         - name: Run tests
-          run: cargo test --verbose
+          run: /home/dietpi/.cargo/bin/cargo test --verbose
