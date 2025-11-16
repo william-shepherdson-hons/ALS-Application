@@ -9,11 +9,7 @@ env:
     CARGO_TERM_COLOR: always
 
 jobs:
-    Cargo-Set-up:
-        runs-on: self-hosted
-        steps:
-        - name: Add cargo to PATH
-          run: echo /home/dietpi/.cargo/bin >> $GITHUB_PATH
+
     Pull:
         defaults:
             run:
@@ -23,12 +19,14 @@ jobs:
         - name: Pull
           run: git pull
     Test:
-        needs:  Pull
+        needs:  [Pull ]
         defaults:
             run:
                 working-directory: /home/dietpi/ALS-Application/src-tauri/
         runs-on: self-hosted
         steps:
+        - name: Add cargo to PATH
+          run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
         - name: Build
           run: cargo build --verbose
         - name: Run tests
@@ -40,6 +38,8 @@ jobs:
         needs: Test
         runs-on: self-hosted
         steps:
+        - name: Add cargo to PATH
+          run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
         - name: Compile
           run: npm run tauri build -- --runner cargo-xwin --target x86_64-pc-windows-msvc
 
