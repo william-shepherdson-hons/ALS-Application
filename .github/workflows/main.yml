@@ -9,6 +9,11 @@ env:
     CARGO_TERM_COLOR: always
 
 jobs:
+    Cargo-Set-up:
+        runs-on: self-hosted
+        steps:
+        - name: Add cargo to PATH
+          run: echo /home/dietpi/.cargo/bin/cargo >> $GITHUB_PATH
     Pull:
         defaults:
             run:
@@ -25,9 +30,9 @@ jobs:
         runs-on: self-hosted
         steps:
         - name: Build
-          run: /home/dietpi/.cargo/bin/cargo build --verbose
+          run: cargo build --verbose
         - name: Run tests
-          run: /home/dietpi/.cargo/bin/cargo test --verbose
+          run: cargo test --verbose
     Compile:
         defaults:
             run:
