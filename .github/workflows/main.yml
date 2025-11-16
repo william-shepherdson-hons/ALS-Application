@@ -1,0 +1,20 @@
+name: Build and test
+
+on:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+env:
+    CARGO_TERM_COLOR: always
+
+jobs:
+    Pull:
+        defaults:
+            run:
+                working-directory: /home/dietpi/ALS-Application/
+        runs-on: self-hosted
+        steps:
+        - name: Build
+          run: git pull
+          
