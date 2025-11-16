@@ -28,3 +28,14 @@ jobs:
           run: /home/dietpi/.cargo/bin/cargo build --verbose
         - name: Run tests
           run: /home/dietpi/.cargo/bin/cargo test --verbose
+    Compile:
+        defaults:
+            run:
+                working-directory: /home/dietpi/ALS-Application/
+        needs: Test
+        runs-on: self-hosted
+        steps:
+        - name: Compile
+          run: npm run tauri build -- --runner cargo-xwin --target x86_64-pc-windows-msvc
+
+
