@@ -2,7 +2,7 @@ use std::fs::{self, File};
 use std::io::Write;
 use std::path::PathBuf;
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 pub fn signin(app_data_dir: String) -> Result<(), String> {
     let mut path = PathBuf::from(&app_data_dir);
 
