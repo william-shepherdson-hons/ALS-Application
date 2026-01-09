@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::{self, Read};
 use std::path::PathBuf;
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 pub async fn check_sign_in_status(app_data_dir: String) -> Result<bool, String> {
     let mut path = PathBuf::from(app_data_dir);
     path.push("launch");

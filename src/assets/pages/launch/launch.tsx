@@ -13,7 +13,7 @@ export default function Launch() {
       const appDataDirPath = await appDataDir();
       let signed_in = false;
       setLoading(false);
-      invoke('check_sign_in_status', {app_data_dir: appDataDirPath}).then((result) => signed_in = result as boolean)
+      await invoke('check_sign_in_status', {app_data_dir: appDataDirPath}).then((result) => signed_in = result as boolean)
 
       if (signed_in) {
         navigate("/main");
