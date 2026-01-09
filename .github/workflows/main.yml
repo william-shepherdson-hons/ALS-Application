@@ -38,6 +38,8 @@ jobs:
         steps:
         - name: Add cargo to PATH
           run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
+        - name: Install new dependancies
+          run: npm install
         - name: Compile
           run: npm run tauri build -- --runner cargo-xwin --target x86_64-pc-windows-msvc
     Upload:
