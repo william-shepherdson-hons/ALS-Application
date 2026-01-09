@@ -43,7 +43,22 @@
 
 .row {
   display: flex;
+  margin-left: auto;
+  margin-right: auto;
   justify-content: center;
+  width: 75%;
+  gap: 10%;
+}
+
+.mainmenu {
+  margin-top: 40px;
+}
+
+.navoptions {
+  width: 100%;
+  padding-top: 6%;
+  position: relative;
+  padding-bottom: 6%;
 }
 
 a {
@@ -69,7 +84,7 @@ button {
   font-weight: 500;
   font-family: inherit;
   color: #0f0f0f;
-  background-color: #ffffff;
+  background-color: #dcabdf;
   transition: border-color 0.25s;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }
@@ -79,17 +94,14 @@ button {
 }
 
 button:hover {
-  border-color: #396cd8;
+  border-color: #c782df;
 }
 button:active {
   border-color: #396cd8;
   background-color: #e8e8e8;
 }
 
-input,
-button {
-  outline: none;
-}
+
 
 #greet-input {
   margin-right: 5px;
