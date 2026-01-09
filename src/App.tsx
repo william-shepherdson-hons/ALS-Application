@@ -8,7 +8,7 @@ import Progress from "./assets/pages/progress/progress";
 import Learn from "./assets/pages/learn/learn";
 import Launch from "./assets/pages/launch/launch";
 
-export default async function App() {
+export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Launch />} />
