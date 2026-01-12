@@ -71,8 +71,10 @@ pub async fn get_refresh_token(details: Details) -> Result<String, AccountError>
 #[derive(Deserialize)]
 struct JwtToken {
     jwt_token: String,
-    _user_id: String,
-    _valid: bool
+    #[allow(dead_code)]
+    user_id: String,
+    #[allow(dead_code)]
+    valid: bool
 }
 
 pub async fn get_jwt_token(refresh_token: &str) -> Result<String, AccountError> {
