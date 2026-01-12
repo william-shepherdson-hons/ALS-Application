@@ -33,10 +33,6 @@ pub async fn set_refresh_token(app_data_dir: &str, refresh_token: &str) -> Resul
     file.write_all(refresh_token.as_bytes())
         .map_err(|e| AccountError::File(format!("Failed to write to refresh token file: {e}")))?;
 
-
-    let mut path = PathBuf::from(&app_data_dir);
-    fs::create_dir_all(&path)
-        .map_err(|e| AccountError::File(format!("Failed to create directory: {e}")))?;
     Ok(())
 }
 
