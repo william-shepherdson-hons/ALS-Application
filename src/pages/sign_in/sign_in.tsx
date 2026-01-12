@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { appDataDir } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/core";
 
-import "../../../App.css";
+import "../../App.css";
 
 export default function SignIn() {
   const [appDataDirPath, setAppDataDirPath] = useState<string>("");

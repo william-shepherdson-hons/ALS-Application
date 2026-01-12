@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fs::{self, File}, io::Write, path::PathBuf};
 use serde::Deserialize;
 
 use crate::structs::details::Details;
@@ -8,17 +8,54 @@ pub enum AccountError {
     Post(String),
     #[error("Parse error: {0}")]
     Parse(String),
+    #[error("File error: {0}")]
+    File(String)
 }
 
-pub async fn sign_in(details: Details) -> Result<(), AccountError> {
+pub async fn sign_in(app_data_dir: String, details: Details) -> Result<(), AccountError> {
     let refresh_token = get_refresh_token(details).await?;
-    let jwt_token = get_jwt_token(refresh_token).await?;
-    
+    let jwt_token = get_jwt_token(&refresh_token).await?;
+    set_refresh_token(&app_data_dir, &refresh_token).await?;
+    set_jwt_token(&app_data_dir, &jwt_token).await?;
+    Ok(())
+}
+
+pub async fn set_refresh_token(app_data_dir: &str, refresh_token: &str) -> Result<(), AccountError> {
+    let mut path = PathBuf::from(&app_data_dir);
+    fs::create_dir_all(&path)
+        .map_err(|e| AccountError::File(format!("Failed to create directory: {e}")))?;
+
+    path.push("refresh.txt");
+
+    let mut file = File::create(path)
+        .map_err(|e| AccountError::File(format!("Failed to create file for refresh token: {e}")))?;
+
+    file.write_all(refresh_token.as_bytes())
+        .map_err(|e| AccountError::File(format!("Failed to write to refresh token file: {e}")))?;
+
+
+    let mut path = PathBuf::from(&app_data_dir);
+    fs::create_dir_all(&path)
+        .map_err(|e| AccountError::File(format!("Failed to create directory: {e}")))?;
+    Ok(())
+}
+
+pub async fn set_jwt_token(app_data_dir: &str, jwt_token: &str) -> Result<(), AccountError>{
+    let mut path = PathBuf::from(&app_data_dir);
+    fs::create_dir_all(&path)
+        .map_err(|e| AccountError::File(format!("Failed to create directory: {e}")))?;
+    path.push("jwt.txt");
+
+    let mut file = File::create(path)
+        .map_err(|e| AccountError::File(format!("Failed to create file for jwt token: {e}")))?;
+
+    file.write_all(jwt_token.as_bytes())
+        .map_err(|e| AccountError::File(format!("Failed to write to jwt token file: {e}")))?;
     Ok(())
 }
 
 
-async fn get_refresh_token(details: Details) -> Result<String, AccountError>{
+pub async fn get_refresh_token(details: Details) -> Result<String, AccountError>{
     let mut map = HashMap::new();
     map.insert("password", details.password);
     map.insert("username", details.username);
@@ -42,7 +79,7 @@ struct JwtToken {
     _valid: bool
 }
 
-async fn get_jwt_token(refresh_token: String) -> Result<String, AccountError> {
+pub async fn get_jwt_token(refresh_token: &str) -> Result<String, AccountError> {
     let mut map = HashMap::new();
     map.insert("token", refresh_token);
     let client = reqwest::Client::new();
