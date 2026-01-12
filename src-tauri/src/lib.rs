@@ -1,8 +1,14 @@
 pub mod auth;
+pub mod services;
+pub mod structs;
+pub mod details;
 
 use crate::auth::{
     signin::signin,
     startup::check_sign_in_status,
+};
+use crate::details::{
+    account::get_account_details
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -11,7 +17,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             signin,
-            check_sign_in_status
+            check_sign_in_status,
+            get_account_details
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

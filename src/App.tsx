@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 
-import MainMenu from "./assets/pages/main menu/main_menu";
-import SignIn from "./assets/pages/sign_in/sign_in";
-import SignUp from "./assets/pages/sign_up/sign_up";
-import Settings from "./assets/pages/settings/settings";
-import Progress from "./assets/pages/progress/progress";
-import Learn from "./assets/pages/learn/learn";
-import Launch from "./assets/pages/launch/launch";
+import MainMenu from "./pages/main menu/main_menu";
+import SignIn from "./pages/sign_in/sign_in";
+import SignUp from "./pages/sign_up/sign_up";
+import Settings from "./pages/settings/settings";
+import Progress from "./pages/progress/progress";
+import Learn from "./pages/learn/learn";
+import Launch from "./pages/launch/launch";
 
 export default function App() {
   return (
