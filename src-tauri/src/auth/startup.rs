@@ -7,7 +7,12 @@ use base64::engine::general_purpose;
 
 #[tauri::command(rename_all = "snake_case")]
 pub async fn check_sign_in_status(app_data_dir: String) -> Result<bool, String> {
-    let data = fetch_refresh_token(&app_data_dir).await?;
+    let data = match fetch_refresh_token(&app_data_dir).await {
+        Ok(token) => token,
+        Err(_) => {
+            return Ok(false)
+        }
+    };
     let jwt_token = get_jwt_token(&data)
         .await
         .map_err(|e| e.to_string())?;
