@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fs::{self, File}, io::Write, path::PathBuf};
 use serde::Deserialize;
 
-use crate::structs::details::Details;
+use crate::structs::{details::Details, info::Info};
 #[derive(thiserror::Error, Debug)]
 pub enum AccountError {
     #[error("Post error: {0}")]
@@ -90,4 +90,18 @@ pub async fn get_jwt_token(refresh_token: &str) -> Result<String, AccountError> 
         .await
         .map_err(|e| AccountError::Parse(format!("Failed to parse response: {e}")))?;
     Ok(text.jwt_token)
+}
+
+pub async fn get_account_info(jwt_token: &str) -> Result<Info, AccountError>{
+    let client = reqwest::Client::new();
+    let res = client.get("https://knowledge_tracing.adaptmath.org/accounts/fetch")
+        .bearer_auth(jwt_token)
+        .send()
+        .await
+        .map_err(|e| AccountError::Post(format!("Failed to recieve account information: {e}")))?;
+    let info = res.json::<Info>()
+        .await
+        .map_err(|e| AccountError::Parse(format!("Faikled to parse response: {e}")))?;
+    Ok(info)
+        
 }
