@@ -1,4 +1,6 @@
 pub mod auth;
+pub mod services;
+pub mod structs;
 
 use crate::auth::{
     signin::signin,
