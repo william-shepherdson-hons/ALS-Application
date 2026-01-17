@@ -13,9 +13,13 @@ pub async fn check_sign_in_status(app_data_dir: String) -> Result<bool, String> 
             return Ok(false)
         }
     };
-    let jwt_token = get_jwt_token(&data)
-        .await
-        .map_err(|e| e.to_string())?;
+    let jwt_token = match get_jwt_token(&data).await {
+        Ok(token) => token,
+        Err(_) => {
+            return  Ok(false);
+        }
+    };
+
     set_jwt_token(&app_data_dir, &jwt_token)
         .await
         .map_err(|e| e.to_string())?;
