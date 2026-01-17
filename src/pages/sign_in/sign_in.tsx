@@ -51,6 +51,7 @@ export default function SignIn() {
         placeholder="Password"
       />
       <button onClick={handleSignIn}>Sign in</button>
+      <button onClick={() => navigate("/signup")}>Sign up</button>
     </main>
   );
 }

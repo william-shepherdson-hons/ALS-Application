@@ -101,7 +101,22 @@ pub async fn get_account_info(jwt_token: &str) -> Result<Info, AccountError>{
         .map_err(|e| AccountError::Post(format!("Failed to recieve account information: {e}")))?;
     let info = res.json::<Info>()
         .await
-        .map_err(|e| AccountError::Parse(format!("Faikled to parse response: {e}")))?;
+        .map_err(|e| AccountError::Parse(format!("Failed to parse response: {e}")))?;
     Ok(info)
         
+}
+
+
+pub async fn sign_up(account: &HashMap<&str, &str>) -> Result<(), AccountError> {
+    let client = reqwest::Client::new();
+    let res = client.post("https://knowledge_tracing.adaptmath.org/accounts/register")
+        .json(account)
+        .send()
+        .await
+        .map_err(|e | AccountError::Post(format!("Failed to send new account request: {e}")))?;
+    if res.status().as_str() == "201" {
+        return Ok(())
+    }
+    let code = res.status();
+    return Err(AccountError::Post(format!("Failed to create account error code: {code}")))
 }
