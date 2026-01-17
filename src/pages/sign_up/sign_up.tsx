@@ -2,7 +2,7 @@ import "../../App.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { appDataDir } from "@tauri-apps/api/path";
-
+import { invoke } from "@tauri-apps/api/core";
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +22,17 @@ export default function SignUp() {
     if (!appDataDirPath) {
       console.error("App data dir not loaded yet!");
       return;
+    }
+    try {
+      await invoke("handle_sign_up", { 
+        username: username,
+        password: password,
+        first_name: first_name,
+        last_name: last_name
+      });
+      navigate("/");
+    } catch (err) {
+      console.error("Failed to sign un:", err);
     }
     
   }
@@ -53,6 +64,7 @@ export default function SignUp() {
         placeholder="Last Name"
       />
       <button onClick={() => navigate("/")}>Cancel</button>
+      <button onClick={sign_up}>Sign Up</button>
     </main>
   );
 }

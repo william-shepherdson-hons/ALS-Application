@@ -10,6 +10,7 @@ use crate::auth::{
 use crate::details::{
     account::get_account_details,
     signout::handle_sign_out,
+    signup::handle_sign_up,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -21,6 +22,7 @@ pub fn run() {
             check_sign_in_status,
             get_account_details,
             handle_sign_out,
+            handle_sign_up,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
