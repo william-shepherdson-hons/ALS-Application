@@ -2,6 +2,7 @@ pub mod auth;
 pub mod services;
 pub mod structs;
 pub mod details;
+pub mod progress;
 
 
 use crate::auth::{
@@ -12,6 +13,9 @@ use crate::details::{
     account::get_account_details,
     signout::handle_sign_out,
     signup::handle_sign_up,
+};
+use crate::progress::{
+    fetch::handle_fetch_progression
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -24,6 +28,7 @@ pub fn run() {
             get_account_details,
             handle_sign_out,
             handle_sign_up,
+            handle_fetch_progression,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
