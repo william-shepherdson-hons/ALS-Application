@@ -19,7 +19,8 @@ use crate::progress::{
     fetch::handle_fetch_progression
 };
 use crate::questions::{
-    topics::handle_fetch_topics
+    topics::handle_fetch_topics,
+    generate::handle_generate_question
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -34,6 +35,7 @@ pub fn run() {
             handle_sign_up,
             handle_fetch_progression,
             handle_fetch_topics,
+            handle_generate_question,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
