@@ -3,6 +3,7 @@ pub mod services;
 pub mod structs;
 pub mod details;
 pub mod progress;
+pub mod questions;
 
 
 use crate::auth::{
@@ -17,6 +18,9 @@ use crate::details::{
 use crate::progress::{
     fetch::handle_fetch_progression
 };
+use crate::questions::{
+    topics::handle_fetch_topics
+};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -29,6 +33,7 @@ pub fn run() {
             handle_sign_out,
             handle_sign_up,
             handle_fetch_progression,
+            handle_fetch_topics,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
