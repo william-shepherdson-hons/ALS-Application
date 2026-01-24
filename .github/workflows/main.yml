@@ -45,7 +45,7 @@ jobs:
         - name: Compile for linux arm
           run: npm run tauri build 
         - name: Compile for Linux x86-64
-          run: npm run tauri build -- -- target x86_64-unknown-linux-gnu
+          run: npm run tauri build -- --target x86_64-unknown-linux-gnu
     Upload:
         needs: Compile
         runs-on: self-hosted
