@@ -16,7 +16,8 @@ use crate::details::{
     signup::handle_sign_up,
 };
 use crate::progress::{
-    fetch::handle_fetch_progression
+    fetch::handle_fetch_progression,
+    update::handle_update_progression
 };
 use crate::questions::{
     topics::handle_fetch_topics,
@@ -36,6 +37,7 @@ pub fn run() {
             handle_fetch_progression,
             handle_fetch_topics,
             handle_generate_question,
+            handle_update_progression
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
