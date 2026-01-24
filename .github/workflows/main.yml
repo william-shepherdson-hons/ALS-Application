@@ -1,56 +1,112 @@
 name: Build and test
 
 on:
-    push:
-        branches: [ "main" ]
+  push:
+    branches: ["main", "updating-cicd"]
+
 env:
-    CARGO_TERM_COLOR: always
+  CARGO_TERM_COLOR: always
 
 jobs:
+  Pull-ARM:
+    defaults:
+      run:
+        working-directory: /home/dietpi/ALS-Application/
+    runs-on: arm64
+    steps:
+      - name: Pull
+        run: git pull
 
-    Pull:
-        defaults:
-            run:
-                working-directory: /home/dietpi/ALS-Application/
-        runs-on: self-hosted
-        steps:
-        - name: Pull
-          run: git pull
-    Test:
-        needs:  Pull
-        defaults:
-            run:
-                working-directory: /home/dietpi/ALS-Application/src-tauri/
-        runs-on: self-hosted
-        steps:
-        - name: Add cargo to PATH
-          run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
-        - name: Build
-          run: cargo build --verbose
-        - name: Run tests
-          run: cargo test --verbose
-    Compile:
-        defaults:
-            run:
-                working-directory: /home/dietpi/ALS-Application/
-        needs: Test
-        runs-on: self-hosted
-        steps:
-        - name: Add cargo to PATH
-          run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
-        - name: Install new dependancies
-          run: npm install
-        - name: Compile
-          run: npm run tauri build -- --runner cargo-xwin --target x86_64-pc-windows-msvc
-    Upload:
-        needs: Compile
-        runs-on: self-hosted
-        steps:
-        - name: Upload Artifact
-          uses: actions/upload-artifact@v4
-          with:
-            name: Application
-            path: /home/dietpi/ALS-Application/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/elearningplatform_0.1.0_x64-setup.exe
+  Pull-X64:
+    defaults:
+      run:
+        working-directory: /home/will/ALS-Application/
+    runs-on: x64
+    steps:
+      - name: Pull
+        run: git pull
 
+  Test-ARM:
+    needs: Pull-ARM
+    defaults:
+      run:
+        working-directory: /home/dietpi/ALS-Application/src-tauri/
+    runs-on: arm64
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Build
+        run: cargo build --verbose
+      - name: Run tests
+        run: cargo test --verbose
 
+  Test-X64:
+    needs: Pull-X64
+    defaults:
+      run:
+        working-directory: /home/will/ALS-Application/src-tauri/
+    runs-on: x64
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/will/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Build
+        run: cargo build --verbose
+      - name: Run tests
+        run: cargo test --verbose
 
+  Compile-Windows:
+    needs: Test-ARM
+    defaults:
+      run:
+        working-directory: /home/dietpi/ALS-Application/
+    runs-on: arm64
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Install dependencies
+        run: npm install
+      - name: Compile Windows
+        run: npm run tauri build -- --runner cargo-xwin --target x86_64-pc-windows-msvc
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Application-Windows
+          path: /home/dietpi/ALS-Application/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/elearningplatform_0.1.0_x64-setup.exe
+
+  Compile-Linux-X64:
+    needs: Test-X64
+    defaults:
+      run:
+        working-directory: /home/will/ALS-Application/
+    runs-on: x64
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/will/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Install dependencies
+        run: npm install
+      - name: Compile Linux x86_64
+        run: npm run tauri build -- --target x86_64-unknown-linux-gnu
+      - name: Upload Linux x86_64 .deb Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Application-Linux-x86_64
+          path: /home/will/ALS-Application/src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/elearningplatform_0.1.0_amd64.deb
+
+  Compile-Linux-ARM:
+    needs: Test-ARM
+    defaults:
+      run:
+        working-directory: /home/dietpi/ALS-Application/
+    runs-on: arm64
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Install dependencies
+        run: npm install
+      - name: Compile Linux ARM
+        run: npm run tauri build
+      - name: Upload Linux ARM .deb Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Application-Linux-ARM
+          path: /home/dietpi/ALS-Application/src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/deb/elearningplatform_0.1.0_arm64.deb
