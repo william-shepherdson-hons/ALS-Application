@@ -53,17 +53,10 @@ jobs:
       run:
         working-directory: /home/dietpi/ALS-Application/
     steps:
-      - name: Debug runner identity
+      - name: Build and run Docker image (Linux x86_64)
         run: |
-          whoami
-          id
-          groups
-          ls -l /var/run/docker.sock
+          docker build -f Dockerfile.tauri-linux-x86_64 -t tauri-linux-x86_64 .
 
-      - name: Build Docker image (Linux x86_64)
-        run: docker build -f Dockerfile.tauri-linux-x86_64 -t tauri-linux-x86_64 .
-      - name: Build Tauri Linux x86_64 in Docker
-        run: |
           docker run --rm \
             --platform linux/amd64 \
             -v /home/dietpi/ALS-Application:/app \
@@ -73,6 +66,7 @@ jobs:
               npm install &&
               npm run tauri build
             "
+
 
   Upload-Artifacts:
     needs:
