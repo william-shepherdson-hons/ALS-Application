@@ -108,7 +108,7 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          path: /home/will/webserver/downloads/
+          path: /webserver/downloads/
       - name: Deploy with Docker
         run: docker compose up -d
-        working-directory: /home/will/webserver
+        working-directory: /webserver
