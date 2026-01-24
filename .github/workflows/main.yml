@@ -1,116 +1,113 @@
-name: Build Tauri App
+name: Build and Test
 
 on:
   push:
-    branches: [ "main", "updating-cicd" ]
-  pull_request:
+    branches: ["main", "updating-cicd"]
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
-  build-linux-x86_64:
-    name: Linux x86_64
-    runs-on: ubuntu-latest
+
+  Pull-ARM:
+    runs-on: ARM-64
+    defaults:
+      run:
+        working-directory: /home/dietpi/ALS-Application/
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Pull ARM repo
+        run: git pull
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Install System Dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y \
-            libfuse2 libglib2.0-0 libgtk-3-0 libgdk-pixbuf2.0-0 \
-            libpango1.0-0 libwebkit2gtk-4.1-0 patchelf build-essential curl
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-unknown-linux-gnu
-          override: true
-
-      - name: Install Node dependencies
-        run: npm ci
-
-      - name: Build Tauri App
-        run: npm run tauri build -- --target x86_64-unknown-linux-gnu
-
-      - name: Upload Linux x86_64 artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: linux-x86_64
-          path: src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/
-
-  build-linux-arm64:
-    name: Linux ARM64
-    runs-on: ubuntu-latest
-    needs: build-linux-x86_64
+  Pull-X64:
+    runs-on: X64
+    defaults:
+      run:
+        working-directory: /home/will/ALS-Application/
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Pull x86_64 Linux repo
+        run: git pull
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
+  Test-ARM:
+    needs: Pull-ARM
+    runs-on: ARM-64
+    defaults:
+      run:
+        working-directory: /home/dietpi/ALS-Application/src-tauri/
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Build Rust (ARM)
+        run: cargo build --verbose
+      - name: Run Rust tests (ARM)
+        run: cargo test --verbose
 
-      - name: Install System Dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y \
-            libfuse2 libglib2.0-0 libgtk-3-0 libgdk-pixbuf2.0-0 \
-            libpango1.0-0 libwebkit2gtk-4.1-0 patchelf build-essential curl
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: aarch64-unknown-linux-gnu
-          override: true
-
+  Compile-ARM-Linux:
+    needs: Test-ARM
+    runs-on: ARM-64
+    defaults:
+      run:
+        working-directory: /home/dietpi/ALS-Application/
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
       - name: Install Node dependencies
-        run: npm ci
-
-      - name: Build Tauri App
+        run: npm install
+      - name: Compile Linux ARM64
         run: npm run tauri build -- --target aarch64-unknown-linux-gnu
-
-      - name: Upload Linux ARM64 artifacts
-        uses: actions/upload-artifact@v3
+      - name: Upload ARM64 artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: linux-arm64
-          path: src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/
+          name: elearningplatform-linux-arm64
+          path: /home/dietpi/ALS-Application/src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/
 
-  build-windows-x86_64:
-    name: Windows x86_64
-    runs-on: windows-latest
-    needs: build-linux-x86_64
+  Compile-Windows:
+    needs: Test-ARM
+    runs-on: ARM-64
+    defaults:
+      run:
+        working-directory: /home/dietpi/ALS-Application/
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-pc-windows-msvc
-          override: true
-
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
       - name: Install Node dependencies
-        run: npm ci
-
-      - name: Build Tauri App
-        run: npm run tauri build -- --target x86_64-pc-windows-msvc
-
-      - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v3
+        run: npm install
+      - name: Cross-compile Windows x64
+        run: npm run tauri build -- --runner cargo-xwin --target x86_64-pc-windows-msvc
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: windows-x86_64
-          path: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/
+          name: elearningplatform-windows-x64
+          path: /home/dietpi/ALS-Application/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/
+
+  Test-X64-Linux:
+    needs: Pull-X64
+    runs-on: X64
+    defaults:
+      run:
+        working-directory: /home/will/ALS-Application/src-tauri/
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/will/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Build Rust (x86_64 Linux)
+        run: cargo build --verbose
+      - name: Run Rust tests (x86_64 Linux)
+        run: cargo test --verbose
+
+  Compile-X64-Linux:
+    needs: Test-X64-Linux
+    runs-on: X64
+    defaults:
+      run:
+        working-directory: /home/will/ALS-Application/
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/will/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Install Node dependencies
+        run: npm install
+      - name: Compile Linux x86_64
+        run: npm run tauri build -- --target x86_64-unknown-linux-gnu
+      - name: Upload x86_64 Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elearningplatform-linux-x64
+          path: /home/will/ALS-Application/src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/
