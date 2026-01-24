@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
 import type { Info } from "../types/info.ts";
+import { useNavigate } from "react-router-dom";
 import "../../App.css";
 
 type QuestionPair = {
@@ -10,6 +11,7 @@ type QuestionPair = {
 };
 
 export default function Learn() {
+  const navigate = useNavigate();
   const [info, setInfo] = useState<Info | null>(null);
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>("");
@@ -183,6 +185,7 @@ export default function Learn() {
           )}
         </div>
       )}
+      <button onClick={() => navigate("/")}>Home</button>
     </main>
   );
 }
