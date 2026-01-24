@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
+import type { Info } from "../types/info.ts";
 import "../../App.css";
 
 type QuestionPair = {
@@ -9,9 +10,12 @@ type QuestionPair = {
 };
 
 export default function Learn() {
+  const [info, setInfo] = useState<Info | null>(null);
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>("");
   const [questionPair, setQuestionPair] = useState<QuestionPair | null>(null);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +33,12 @@ export default function Learn() {
         if (result.length > 0) {
           setSelectedTopic(result[0]);
         }
+
+        const accountInfo = await invoke<Info>("get_account_details", {
+          app_data_dir: appDataDirPath,
+        });
+
+        setInfo(accountInfo);
       } catch (err) {
         setError(String(err));
       } finally {
@@ -43,6 +53,8 @@ export default function Learn() {
     try {
       setGenerating(true);
       setError(null);
+      setUserAnswer("");
+      setIsCorrect(null);
 
       const appDataDirPath = await appDataDir();
 
@@ -57,6 +69,15 @@ export default function Learn() {
     } finally {
       setGenerating(false);
     }
+  }
+
+  function handleSubmitAnswer() {
+    if (!questionPair) return;
+
+    const normalizedUser = userAnswer.trim().toLowerCase();
+    const normalizedCorrect = questionPair.answer.trim().toLowerCase();
+
+    setIsCorrect(normalizedUser === normalizedCorrect);
   }
 
   if (loading) {
@@ -77,6 +98,8 @@ export default function Learn() {
     );
   }
 
+  const canSeeAnswer = info?.username === "will";
+
   return (
     <main className="container">
       <h1>Learn</h1>
@@ -88,6 +111,8 @@ export default function Learn() {
         onChange={(e) => {
           setSelectedTopic(e.target.value);
           setQuestionPair(null);
+          setUserAnswer("");
+          setIsCorrect(null);
         }}
       >
         {topics.map((topic) => (
@@ -109,10 +134,35 @@ export default function Learn() {
           <h2>Question</h2>
           <p>{questionPair.question}</p>
 
-          <details>
-            <summary>Show Answer</summary>
-            <p>{questionPair.answer}</p>
-          </details>
+          <label htmlFor="answer-input">Your answer:</label>
+          <input
+            id="answer-input"
+            type="text"
+            value={userAnswer}
+            onChange={(e) => setUserAnswer(e.target.value)}
+          />
+
+          <button
+            onClick={handleSubmitAnswer}
+            disabled={!userAnswer.trim()}
+          >
+            Submit Answer
+          </button>
+
+          {isCorrect === true && (
+            <p className="correct">Correct!</p>
+          )}
+
+          {isCorrect === false && (
+            <p className="incorrect">Incorrect.</p>
+          )}
+
+          {canSeeAnswer && (
+            <details>
+              <summary>Show Answer</summary>
+              <p>{questionPair.answer}</p>
+            </details>
+          )}
         </div>
       )}
     </main>
