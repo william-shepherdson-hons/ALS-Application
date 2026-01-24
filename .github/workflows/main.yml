@@ -12,7 +12,7 @@ jobs:
     defaults:
       run:
         working-directory: /home/dietpi/ALS-Application/
-    runs-on: ARM-64
+    runs-on: arm64
     steps:
       - name: Pull
         run: git pull
@@ -21,7 +21,7 @@ jobs:
     defaults:
       run:
         working-directory: /home/will/ALS-Application/
-    runs-on: X64
+    runs-on: x64
     steps:
       - name: Pull
         run: git pull
@@ -31,10 +31,24 @@ jobs:
     defaults:
       run:
         working-directory: /home/dietpi/ALS-Application/src-tauri/
-    runs-on: ARM-64
+    runs-on: arm64
     steps:
       - name: Add cargo to PATH
         run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
+      - name: Build
+        run: cargo build --verbose
+      - name: Run tests
+        run: cargo test --verbose
+
+  Test-X64:
+    needs: Pull-X64
+    defaults:
+      run:
+        working-directory: /home/will/ALS-Application/src-tauri/
+    runs-on: x64
+    steps:
+      - name: Add cargo to PATH
+        run: echo "PATH=/home/will/.cargo/bin:$PATH" >> $GITHUB_ENV
       - name: Build
         run: cargo build --verbose
       - name: Run tests
@@ -45,7 +59,7 @@ jobs:
     defaults:
       run:
         working-directory: /home/dietpi/ALS-Application/
-    runs-on: ARM-64
+    runs-on: arm64
     steps:
       - name: Add cargo to PATH
         run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
@@ -60,11 +74,11 @@ jobs:
           path: /home/dietpi/ALS-Application/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/elearningplatform_0.1.0_x64-setup.exe
 
   Compile-Linux-X64:
-    needs: Test-ARM
+    needs: Test-X64
     defaults:
       run:
-        working-directory: /home/dietpi/ALS-Application/
-    runs-on: X64
+        working-directory: /home/will/ALS-Application/
+    runs-on: x64
     steps:
       - name: Add cargo to PATH
         run: echo "PATH=/home/will/.cargo/bin:$PATH" >> $GITHUB_ENV
@@ -83,7 +97,7 @@ jobs:
     defaults:
       run:
         working-directory: /home/dietpi/ALS-Application/
-    runs-on: ARM-64
+    runs-on: arm64
     steps:
       - name: Add cargo to PATH
         run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
