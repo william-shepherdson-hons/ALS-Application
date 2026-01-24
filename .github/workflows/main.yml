@@ -108,7 +108,11 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          path: /webserver/downloads/
+          path: /tmp/artifacts/
+      - name: Move artifacts to downloads folder
+        run: |
+          mkdir -p /webserver/downloads/
+          find /tmp/artifacts -type f -exec mv {} /webserver/downloads/ \;
       - name: Deploy with Docker
         run: docker compose up -d
         working-directory: /webserver
