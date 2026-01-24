@@ -55,7 +55,12 @@ jobs:
     steps:
       - name: Build and run Docker image (Linux x86_64)
         run: |
-          docker build -f Dockerfile.tauri-linux-x86_64 -t tauri-linux-x86_64 .
+          docker buildx build \
+            --platform linux/amd64 \
+            -f Dockerfile.tauri-linux-x86_64 \
+            -t tauri-linux-x86_64 \
+            --load \
+            .
 
           docker run --rm \
             --platform linux/amd64 \
@@ -66,6 +71,7 @@ jobs:
               npm install &&
               npm run tauri build
             "
+
 
 
   Upload-Artifacts:
