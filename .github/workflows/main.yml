@@ -16,9 +16,10 @@ jobs:
         working-directory: /home/dietpi/ALS-Application/
     steps:
       - run: git pull
+  
 
   Build-Tauri-Linux-ARM:
-    needs: Pull
+    needs: Build-Tauri-Linux-x86_64
     runs-on: self-hosted
     defaults:
       run:
@@ -32,7 +33,7 @@ jobs:
         run: npm run tauri build
 
   Build-Tauri-Windows:
-    needs: Pull
+    needs: Build-Tauri-Linux-x86_64
     runs-on: self-hosted
     defaults:
       run:
@@ -52,6 +53,13 @@ jobs:
       run:
         working-directory: /home/dietpi/ALS-Application/
     steps:
+      - name: Debug runner identity
+        run: |
+          whoami
+          id
+          groups
+          ls -l /var/run/docker.sock
+
       - name: Build Docker image (Linux x86_64)
         run: docker build -f Dockerfile.tauri-linux-x86_64 -t tauri-linux-x86_64 .
       - name: Build Tauri Linux x86_64 in Docker
