@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
+import { useNavigate } from "react-router-dom";
 import "../../App.css";
 
 interface SkillProgression {
@@ -12,6 +13,7 @@ export default function Progress() {
   const [progressions, setProgressions] = useState<SkillProgression[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchProgression() {
@@ -53,6 +55,7 @@ export default function Progress() {
           ))}
         </tbody>
       </table>
+      <button onClick={() => navigate("/")}>Home</button>
     </main>
   );
 }
