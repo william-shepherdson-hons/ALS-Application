@@ -16,6 +16,7 @@ export default function Learn() {
   const [questionPair, setQuestionPair] = useState<QuestionPair | null>(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,6 +56,7 @@ export default function Learn() {
       setError(null);
       setUserAnswer("");
       setIsCorrect(null);
+      setHasSubmitted(false);
 
       const appDataDirPath = await appDataDir();
 
@@ -71,13 +73,27 @@ export default function Learn() {
     }
   }
 
-  function handleSubmitAnswer() {
-    if (!questionPair) return;
+  async function handleSubmitAnswer() {
+    if (!questionPair || hasSubmitted) return;
 
     const normalizedUser = userAnswer.trim().toLowerCase();
     const normalizedCorrect = questionPair.answer.trim().toLowerCase();
+    const correct = normalizedUser === normalizedCorrect;
 
-    setIsCorrect(normalizedUser === normalizedCorrect);
+    setIsCorrect(correct);
+    setHasSubmitted(true);
+
+    try {
+      const appDataDirPath = await appDataDir();
+
+      await invoke("handle_update_progression", {
+        app_data_dir: appDataDirPath,
+        skill: selectedTopic,
+        correct,
+      });
+    } catch (err) {
+      console.error("Failed to update progression:", err);
+    }
   }
 
   if (loading) {
@@ -113,6 +129,7 @@ export default function Learn() {
           setQuestionPair(null);
           setUserAnswer("");
           setIsCorrect(null);
+          setHasSubmitted(false);
         }}
       >
         {topics.map((topic) => (
@@ -140,11 +157,12 @@ export default function Learn() {
             type="text"
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
+            disabled={hasSubmitted}
           />
 
           <button
             onClick={handleSubmitAnswer}
-            disabled={!userAnswer.trim()}
+            disabled={!userAnswer.trim() || hasSubmitted}
           >
             Submit Answer
           </button>

@@ -25,7 +25,7 @@ pub async fn update_progression(jwt_token: String, topic: String, correct: bool)
     map.insert("correct", correct);
     let client = reqwest::Client::new();
     let _ = client
-        .get(format!("https://knowledge_tracing.adaptmath.org/students/skills/{topic}/performance"))
+        .patch(format!("https://knowledge_tracing.adaptmath.org/students/skills/{topic}/performance"))
         .bearer_auth(jwt_token)
         .json(&map)
         .send()
