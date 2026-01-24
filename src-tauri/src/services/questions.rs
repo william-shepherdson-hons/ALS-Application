@@ -35,3 +35,4 @@ pub async fn generate_question(jwt_token: String, topic: String) -> Result<Quest
         .map_err(|e| e.to_string())?;
     Ok(info)
 }
+
