@@ -18,7 +18,7 @@ pub async fn get_topics(jwt_token: String) -> Result<Vec<String>, String>{
     Ok(info)
 }
 
-pub async fn generate_question(jwt_token: String, topic: String) -> Result<QuestionPair, String> {
+pub async fn generate_question(jwt_token: &str, topic: &str) -> Result<QuestionPair, String> {
     let client = reqwest::Client::new();
 
     let res = client
