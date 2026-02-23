@@ -7,6 +7,7 @@ import Settings from "./pages/settings/settings";
 import Progress from "./pages/progress/progress";
 import Learn from "./pages/learn/learn";
 import Launch from "./pages/launch/launch";
+import Assessment from "./pages/assessment/assessment";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <Route path="/progress" element={<Progress />} />
       <Route path="/learn" element={<Learn />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/assessment" element={<Assessment />} />
     </Routes>
   );
 }
