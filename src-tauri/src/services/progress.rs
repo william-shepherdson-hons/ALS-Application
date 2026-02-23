@@ -20,7 +20,7 @@ pub async fn get_progression(jwt_token: String) -> Result<Vec<SkillProgression>,
 
     Ok(info)
 }
-pub async fn update_progression(jwt_token: String, topic: String, correct: bool) -> Result<(), String> {
+pub async fn update_progression(jwt_token: &str, topic: String, correct: bool) -> Result<(), String> {
     let mut map = HashMap::new();
     map.insert("correct", correct);
     let client = reqwest::Client::new();
