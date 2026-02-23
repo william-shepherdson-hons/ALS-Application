@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
 import { useNavigate, useLocation } from "react-router-dom";
+import type { Info } from "../types/info.ts";
 import "../../App.css";
 
 const QUESTION_COUNT = 10;
@@ -19,7 +20,7 @@ type AssessmentResult = {
 type QuestionState = {
   pair: QuestionPair;
   userAnswer: string;
-  correct: boolean | null; // null = not yet submitted
+  correct: boolean | null;
 };
 
 export default function Assessment() {
@@ -34,6 +35,7 @@ export default function Assessment() {
   const [submitting, setSubmitting] = useState(false);
   const [finished, setFinished] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<Info | null>(null);
 
   useEffect(() => {
     if (!topic) {
@@ -49,6 +51,11 @@ export default function Assessment() {
           amount: QUESTION_COUNT,
         });
         setQuestions(pairs.map((pair) => ({ pair, userAnswer: "", correct: null })));
+
+        const accountInfo = await invoke<Info>("get_account_details", {
+          app_data_dir: appDataDirPath,
+        });
+        setInfo(accountInfo);
       } catch (err) {
         setError(String(err));
       } finally {
@@ -120,6 +127,7 @@ export default function Assessment() {
   }
 
   const score = questions.filter((q) => q.correct === true).length;
+  const canSeeAnswer = info?.username === "will";
 
   if (finished) {
     return (
@@ -184,6 +192,13 @@ export default function Assessment() {
         <button onClick={handleSubmitAnswer} disabled={!inputValue.trim()}>
           {currentIndex + 1 === questions.length ? "Finish" : "Next"}
         </button>
+
+        {canSeeAnswer && (
+          <details>
+            <summary>Show Answer</summary>
+            <p>{current.pair.answer}</p>
+          </details>
+        )}
       </div>
 
       <button onClick={() => navigate("/learn")}>Cancel</button>
