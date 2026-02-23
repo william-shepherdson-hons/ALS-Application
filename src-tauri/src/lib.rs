@@ -23,6 +23,10 @@ use crate::questions::{
     topics::handle_fetch_topics,
     generate::handle_generate_question
 };
+use crate::questions::assessment::{
+    generate_assessment,
+    grade_assessment
+};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -37,7 +41,9 @@ pub fn run() {
             handle_fetch_progression,
             handle_fetch_topics,
             handle_generate_question,
-            handle_update_progression
+            handle_update_progression,
+            generate_assessment,
+            grade_assessment
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
