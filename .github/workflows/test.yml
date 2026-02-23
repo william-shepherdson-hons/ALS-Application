@@ -12,7 +12,7 @@ jobs:
         defaults:
             run:
                 working-directory: /home/dietpi/ALS-Application/
-        runs-on: self-hosted
+        runs-on: arm64
         steps:
         - name: Pull
           run: git pull
@@ -21,7 +21,7 @@ jobs:
         defaults:
             run:
                 working-directory: /home/dietpi/ALS-Application/src-tauri/
-        runs-on: self-hosted
+        runs-on: arm64
         steps:
         - name: Add cargo to PATH
           run: echo "PATH=/home/dietpi/.cargo/bin:$PATH" >> $GITHUB_ENV
