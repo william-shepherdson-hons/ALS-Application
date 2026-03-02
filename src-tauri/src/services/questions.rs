@@ -18,21 +18,42 @@ pub async fn get_topics(jwt_token: String) -> Result<Vec<String>, String>{
     Ok(info)
 }
 
-pub async fn generate_question(jwt_token: &str, topic: &str) -> Result<QuestionPair, String> {
+pub async fn generate_question(
+    jwt_token: &str,
+    topic: &str,
+    word: bool,
+) -> Result<QuestionPair, String> {
+
     let client = reqwest::Client::new();
 
+    let url = if word {
+        format!("https://question_generation.adaptmath.org/generate_word/{topic}/")
+    } else {
+        format!("https://question_generation.adaptmath.org/generate/{topic}/")
+    };
+
     let res = client
-        .get(format!("https://question_generation.adaptmath.org/generate/{topic}/"))
+        .get(&url)
         .bearer_auth(jwt_token)
         .send()
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| format!("Request failed: {e}"))?;
 
+    let status = res.status();
 
-    let info = res
-        .json::<QuestionPair>()
-        .await
-        .map_err(|e| e.to_string())?;
+    if !status.is_success() {
+        let text = res.text().await.unwrap_or_default();
+        return Err(format!("API returned {}: {}", status, text));
+    }
+
+    let text = res.text().await
+        .map_err(|e| format!("Failed reading body: {e}"))?;
+
+    println!("Raw response: {}", text); // TEMP DEBUG
+
+    let info: QuestionPair = serde_json::from_str(&text)
+        .map_err(|e| format!("JSON decode error: {e}. Body was: {text}"))?;
+
     Ok(info)
 }
 
