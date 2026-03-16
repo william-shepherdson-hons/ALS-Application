@@ -1,8 +1,8 @@
-import "../../App.css";
 import { useEffect, useState } from "react";
 import { appDataDir } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/core";
 import { useNavigate } from "react-router-dom";
+import "./settings.css";
 
 export default function Settings() {
   const [aiEnabled, setAiEnabled] = useState<boolean | null>(null);
@@ -14,10 +14,9 @@ export default function Settings() {
       try {
         const appDataDirPath = await appDataDir();
 
-        const result = await invoke<boolean>(
-          "read_question_type",
-          { app_data_dir: appDataDirPath }
-        );
+        const result = await invoke<boolean>("read_question_type", {
+          app_data_dir: appDataDirPath,
+        });
 
         setAiEnabled(result);
       } catch (err) {
@@ -49,16 +48,19 @@ export default function Settings() {
   }
 
   if (loading) {
-    return <div>Loading settings…</div>;
+    return <div className="settings-container">Loading settings…</div>;
   }
 
   return (
-    <main className="container">
+    <main className="container settings-container">
       <h1>Settings</h1>
 
       <div className="settings-section">
         <label className="toggle-row">
-          <span>AI Question Mode (Please limit use to necessary cases only as it costs money)</span>
+          <span>
+            AI Question Mode (Please limit use to necessary cases only as it
+            costs money)
+          </span>
           <input
             type="checkbox"
             checked={aiEnabled ?? false}
@@ -67,10 +69,7 @@ export default function Settings() {
         </label>
       </div>
 
-      <button
-        className="navoptions"
-        onClick={() => navigate("/main")}
-      >
+      <button className="navoptions" onClick={() => navigate("/main")}>
         Back to Main Menu
       </button>
     </main>
