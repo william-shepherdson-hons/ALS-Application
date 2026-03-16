@@ -33,3 +33,14 @@ pub async fn update_progression(jwt_token: &str, topic: String, correct: bool) -
         .map_err(|e | e.to_string())?;
     Ok(())
 }
+
+pub async fn log_progress(jwt_token: &str, skill_name: &str) -> Result<(), String> {
+    let client = reqwest::Client::new();
+    let _ = client
+        .post(format!("https://knowledge_tracing.adaptmath.org/students/skills/{skill_name}/log"))
+        .bearer_auth(jwt_token)
+        .send()
+        .await
+        .map_err(|e| e.to_string())?;
+    Ok(())
+}
