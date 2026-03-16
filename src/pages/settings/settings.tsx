@@ -58,7 +58,7 @@ export default function Settings() {
 
       <div className="settings-section">
         <label className="toggle-row">
-          <span>AI Question Mode</span>
+          <span>AI Question Mode (Please limit use to necessary cases only as it costs money)</span>
           <input
             type="checkbox"
             checked={aiEnabled ?? false}
