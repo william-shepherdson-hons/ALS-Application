@@ -4,6 +4,7 @@ pub mod structs;
 pub mod details;
 pub mod progress;
 pub mod questions;
+pub mod settings;
 
 
 use crate::auth::{
@@ -21,11 +22,15 @@ use crate::progress::{
 };
 use crate::questions::{
     topics::handle_fetch_topics,
-    generate::handle_generate_question
+    generate::handle_generate_questions
 };
 use crate::questions::assessment::{
     generate_assessment,
     grade_assessment
+};
+use crate::settings::question_type::{
+    toggle_question_type,
+    read_question_type
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -40,10 +45,12 @@ pub fn run() {
             handle_sign_up,
             handle_fetch_progression,
             handle_fetch_topics,
-            handle_generate_question,
+            handle_generate_questions,
             handle_update_progression,
             generate_assessment,
-            grade_assessment
+            grade_assessment,
+            toggle_question_type,
+            read_question_type
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

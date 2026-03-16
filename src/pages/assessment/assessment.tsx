@@ -42,6 +42,7 @@ export default function Assessment() {
       navigate("/learn");
       return;
     }
+
     async function generateAssessment() {
       try {
         const appDataDirPath = await appDataDir();
@@ -50,7 +51,9 @@ export default function Assessment() {
           topic,
           amount: QUESTION_COUNT,
         });
-        setQuestions(pairs.map((pair) => ({ pair, userAnswer: "", correct: null })));
+        setQuestions(
+          pairs.map((pair) => ({ pair, userAnswer: "", correct: null }))
+        );
 
         const accountInfo = await invoke<Info>("get_account_details", {
           app_data_dir: appDataDirPath,
@@ -62,6 +65,7 @@ export default function Assessment() {
         setLoading(false);
       }
     }
+
     generateAssessment();
   }, []);
 
@@ -144,10 +148,15 @@ export default function Assessment() {
           {questions.map((q, i) => (
             <div key={i} className={`result-item ${q.correct ? "correct" : "incorrect"}`}>
               <p>
-                <strong>Q{i + 1}:</strong> {q.pair.question}
+                <strong>Q{i + 1}:</strong>{" "}
+                <span dangerouslySetInnerHTML={{ __html: q.pair.question }} />
               </p>
               <p>Your answer: {q.userAnswer}</p>
-              {!q.correct && <p>Correct answer: {q.pair.answer}</p>}
+              {!q.correct && (
+                <p>
+                  Correct answer: <span dangerouslySetInnerHTML={{ __html: q.pair.answer }} />
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -175,7 +184,7 @@ export default function Assessment() {
 
       <div className="question-card">
         <h2>Question</h2>
-        <p>{current.pair.question}</p>
+        <p dangerouslySetInnerHTML={{ __html: current.pair.question }} />
 
         <label htmlFor="answer-input">Your answer:</label>
         <input
@@ -196,7 +205,7 @@ export default function Assessment() {
         {canSeeAnswer && (
           <details>
             <summary>Show Answer</summary>
-            <p>{current.pair.answer}</p>
+            <p dangerouslySetInnerHTML={{ __html: current.pair.answer }} />
           </details>
         )}
       </div>
