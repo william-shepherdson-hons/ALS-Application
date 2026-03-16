@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { appDataDir } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/core";
-import "../../App.css";
+import "./sign_in.css";
 
 export default function SignIn() {
   const [appDataDirPath, setAppDataDirPath] = useState("");
@@ -19,15 +19,12 @@ export default function SignIn() {
   }, []);
 
   const handleSignIn = async () => {
-    if (!appDataDirPath) {
-      console.error("App data dir not loaded yet!");
-      return;
-    }
+    if (!appDataDirPath) return;
     try {
       await invoke("signin", { 
         app_data_dir: appDataDirPath,
-        username: username,
-        password: password
+        username,
+        password
       });
       navigate("/main");
     } catch (err) {
@@ -36,22 +33,24 @@ export default function SignIn() {
   };
 
   return (
-    <main className="container">
-      <h1>Sign In</h1>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button onClick={handleSignIn}>Sign in</button>
-      <button onClick={() => navigate("/signup")}>Sign up</button>
-    </main>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1>Sign In</h1>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button onClick={handleSignIn}>Sign In</button>
+        <button onClick={() => navigate("/signup")}>Sign Up</button>
+      </div>
+    </div>
   );
 }
