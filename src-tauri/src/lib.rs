@@ -22,7 +22,7 @@ use crate::progress::{
 };
 use crate::questions::{
     topics::handle_fetch_topics,
-    generate::handle_generate_question
+    generate::handle_generate_questions
 };
 use crate::questions::assessment::{
     generate_assessment,
@@ -45,7 +45,7 @@ pub fn run() {
             handle_sign_up,
             handle_fetch_progression,
             handle_fetch_topics,
-            handle_generate_question,
+            handle_generate_questions,
             handle_update_progression,
             generate_assessment,
             grade_assessment,
