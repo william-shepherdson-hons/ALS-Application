@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
 import { useNavigate, useLocation } from "react-router-dom";
 import type { Info } from "../types/info.ts";
-import "../../App.css";
+import "./assessment.css";
 
 const QUESTION_COUNT = 10;
 
@@ -113,7 +113,7 @@ export default function Assessment() {
 
   if (loading) {
     return (
-      <main className="container">
+      <main className="container assessment-container">
         <h1>Assessment: {topic}</h1>
         <p>Generating questions…</p>
       </main>
@@ -122,7 +122,7 @@ export default function Assessment() {
 
   if (error) {
     return (
-      <main className="container">
+      <main className="container assessment-container">
         <h1>Assessment</h1>
         <p className="error">{error}</p>
         <button onClick={() => navigate("/learn")}>Back</button>
@@ -135,7 +135,7 @@ export default function Assessment() {
 
   if (finished) {
     return (
-      <main className="container">
+      <main className="container assessment-container">
         <h1>Assessment Complete</h1>
         <p>
           Topic: <strong>{topic}</strong>
@@ -176,7 +176,7 @@ export default function Assessment() {
   const current = questions[currentIndex];
 
   return (
-    <main className="container">
+    <main className="container assessment-container">
       <h1>Assessment: {topic}</h1>
       <p>
         Question {currentIndex + 1} of {questions.length}

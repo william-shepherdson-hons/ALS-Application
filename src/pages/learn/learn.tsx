@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
 import { useNavigate } from "react-router-dom";
-import "../../App.css";
+import "./learn.css";
 
 export default function Learn() {
   const navigate = useNavigate();
@@ -19,15 +19,14 @@ export default function Learn() {
           app_data_dir: appDataDirPath,
         });
         setTopics(result);
-        if (result.length > 0) {
-          setSelectedTopic(result[0]);
-        }
+        if (result.length > 0) setSelectedTopic(result[0]);
       } catch (err) {
         setError(String(err));
       } finally {
         setLoading(false);
       }
     }
+
     fetchTopics();
   }, []);
 
@@ -38,7 +37,7 @@ export default function Learn() {
 
   if (loading) {
     return (
-      <main className="container">
+      <main className="container learn-container">
         <h1>Learn</h1>
         <p>Loading topics…</p>
       </main>
@@ -47,7 +46,7 @@ export default function Learn() {
 
   if (error) {
     return (
-      <main className="container">
+      <main className="container learn-container">
         <h1>Learn</h1>
         <p className="error">{error}</p>
       </main>
@@ -55,7 +54,7 @@ export default function Learn() {
   }
 
   return (
-    <main className="container">
+    <main className="container learn-container">
       <h1>Learn</h1>
 
       <label htmlFor="topic-select">Select a topic:</label>

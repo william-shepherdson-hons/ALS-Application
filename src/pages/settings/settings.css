@@ -1,0 +1,81 @@
+/* settings-page.css */
+
+/* Container for Settings page */
+.settings-container {
+  padding-top: 12vh;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Heading */
+.settings-container h1 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+/* Settings sections */
+.settings-container .settings-section {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+/* Toggle row styling */
+.settings-container .toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f4f4f4;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.settings-container .toggle-row:hover {
+  background-color: #eaeaff;
+  border-color: #646cff;
+}
+
+.settings-container .toggle-row span {
+  max-width: 70%;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* Checkbox styling */
+.settings-container .toggle-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Navigation button */
+.settings-container .navoptions {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.8rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #646cff, #535bf2);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.25s ease;
+}
+
+.settings-container .navoptions:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #535bf2, #4049c0);
+}
+
+.settings-container .navoptions:active {
+  transform: translateY(0);
+  background: linear-gradient(135deg, #4049c0, #3138a0);
+}

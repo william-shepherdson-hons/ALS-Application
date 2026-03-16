@@ -1,0 +1,82 @@
+/* learn-page.css */
+
+/* Container adjustments for Learn page */
+.learn-container {
+  padding-top: 12vh;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Page heading */
+.learn-container h1 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Label for select */
+.learn-container label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+/* Select dropdown */
+.learn-container select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.learn-container select:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.2);
+}
+
+/* Buttons */
+.learn-container button {
+  width: 100%;
+  max-width: 250px;
+  margin: 0.5rem auto;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #646cff, #535bf2);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.25s ease;
+  display: block;
+}
+
+.learn-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.learn-container button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #535bf2, #4049c0);
+}
+
+.learn-container button:active:not(:disabled) {
+  transform: translateY(0);
+  background: linear-gradient(135deg, #4049c0, #3138a0);
+}
+
+/* Error message */
+.learn-container .error {
+  color: #ff4c4c;
+  margin-top: 1rem;
+  font-weight: 500;
+}

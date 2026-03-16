@@ -1,0 +1,71 @@
+/* main-page.css */
+
+/* Adjust container spacing specifically for this page */
+.main-container {
+  padding-top: 15vh;
+  text-align: center;
+}
+
+/* Heading styling */
+.main-container h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+/* Main menu buttons row */
+.main-container .row {
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+/* Individual navigation buttons */
+.main-container .navoptions {
+  width: 200px;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #646cff, #535bf2);
+  border: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+.main-container .navoptions:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #535bf2, #4049c0);
+}
+
+/* Sign Out button */
+.main-container > .mainmenu > button {
+  margin-top: 2rem;
+  background-color: #ff6b6b;
+  color: #fff;
+  padding: 0.8rem 1.6rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.main-container > .mainmenu > button:hover {
+  background-color: #ff4c4c;
+  transform: translateY(-2px);
+}
+
+.main-container > .mainmenu > button:active {
+  background-color: #e63939;
+  transform: translateY(0);
+}
+
+/* Loading and error messages */
+.main-container div {
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 2rem;
+}
