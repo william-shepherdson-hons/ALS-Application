@@ -1,0 +1,106 @@
+/* progress-page.css */
+
+/* Container for Progress page */
+.progress-container {
+  padding-top: 12vh;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Heading */
+.progress-container h1 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+/* Skill selection dropdown */
+.progress-container label {
+  display: block;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+}
+
+.progress-container select {
+  margin-left: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.progress-container select:hover {
+  border-color: #646cff;
+  box-shadow: 0 0 5px rgba(100,108,255,0.3);
+}
+
+/* Chart container */
+.progress-container .chart-wrapper {
+  margin: 2rem 0;
+  width: 100%;
+  height: 400px;
+}
+
+/* Loading and error messages */
+.progress-container p {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 1rem;
+}
+
+/* Table styling (optional fallback if chart not used) */
+.progress-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.progress-container table th,
+.progress-container table td {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.progress-container table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+  color: #333;
+}
+
+.progress-container table tr:hover {
+  background-color: #eaeaff;
+}
+
+/* Navigation button */
+.progress-container .navoptions {
+  display: block;
+  margin: 1.5rem auto 0;
+  padding: 0.8rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #646cff, #535bf2);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.25s ease;
+}
+
+.progress-container .navoptions:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #535bf2, #4049c0);
+}
+
+.progress-container .navoptions:active {
+  transform: translateY(0);
+  background: linear-gradient(135deg, #4049c0, #3138a0);
+}

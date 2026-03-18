@@ -3,6 +3,18 @@ import { invoke } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
 import { useNavigate } from "react-router-dom";
 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+
+import "./progress.css"; 
+
 interface SkillProgression {
   skill_name: string;
   progression: number;
@@ -31,7 +43,6 @@ export default function Progress() {
 
         setSkills(result);
 
-        // auto-select first skill if exists
         if (result.length > 0) {
           setSelectedSkill(result[0]);
         }
@@ -74,9 +85,21 @@ export default function Progress() {
     fetchHistory();
   }, [selectedSkill]);
 
+  // Prepare chart data (sorted + timestamp-based)
+  const chartData = [...history]
+    .sort(
+      (a, b) =>
+        new Date(a.recorded_at).getTime() -
+        new Date(b.recorded_at).getTime()
+    )
+    .map((entry) => ({
+      time: new Date(entry.recorded_at).getTime(),
+      progression: entry.progression,
+    }));
+
   if (loading) {
     return (
-      <main className="container">
+      <main className="progress-container">
         <h1>Progress History</h1>
         <p>Loading skills...</p>
       </main>
@@ -85,7 +108,7 @@ export default function Progress() {
 
   if (error) {
     return (
-      <main className="container">
+      <main className="progress-container">
         <h1>Progress History</h1>
         <p>Error: {error}</p>
       </main>
@@ -93,13 +116,14 @@ export default function Progress() {
   }
 
   return (
-    <main className="container">
+    <main className="progress-container">
       <h1>Progress History</h1>
 
       {/* Dropdown */}
       <label>
         Select Skill:
         <select
+          className="skill-dropdown"
           value={selectedSkill}
           onChange={(e) => setSelectedSkill(e.target.value)}
         >
@@ -111,31 +135,53 @@ export default function Progress() {
         </select>
       </label>
 
-      {/* History Table */}
+      {/* Chart */}
       {historyLoading ? (
         <p>Loading history...</p>
+      ) : history.length === 0 ? (
+        <p>No historical data for this skill.</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Skill Name</th>
-              <th>Progression</th>
-              <th>Recorded At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {history.map((entry, idx) => (
-              <tr key={idx}>
-                <td>{entry.skill_name}</td>
-                <td>{entry.progression.toFixed(2)}</td>
-                <td>{new Date(entry.recorded_at).toLocaleString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="chart-wrapper">
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+
+              <XAxis
+                dataKey="time"
+                tickFormatter={(t) =>
+                  new Date(t).toLocaleDateString()
+                }
+              />
+
+              <YAxis domain={[0, 1]} />
+
+              <Tooltip
+                formatter={(value: any) =>
+                  typeof value === "number" ? value.toFixed(3) : value ?? ""
+                }
+                labelFormatter={(label: any) =>
+                  new Date(label).toLocaleString()
+                }
+              />
+
+              <Line
+                type="monotone"
+                dataKey="progression"
+                stroke="#8884d8"
+                strokeWidth={2}
+                dot={true}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       )}
 
-      <button onClick={() => navigate("/")}>Home</button>
+      <button
+        className="navoptions"
+        onClick={() => navigate("/")}
+      >
+        Home
+      </button>
     </main>
   );
 }

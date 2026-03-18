@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import type { Info } from "../types/info.ts";
 import "./assessment.css";
 
-const QUESTION_COUNT = 10;
+const QUESTION_COUNT = 5;
 
 type QuestionPair = {
   question: string;
