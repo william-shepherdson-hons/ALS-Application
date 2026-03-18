@@ -1,7 +1,7 @@
 use crate::{
     auth::startup::fetch_jwt_token,
     services::{
-        progress::update_progression,
+        progress::{log_progress, update_progression},
         questions::generate_questions
     },
     settings::question_type::read_question_type,
@@ -42,11 +42,13 @@ pub async fn grade_assessment(
 
     let jwt = fetch_jwt_token(app_data_dir).await?;
 
-    for result in results {
+    for result in results.clone() {
         update_progression(&jwt, result.topic, result.correct)
             .await
             .map_err(|e| format!("Failed to update knowledge: {e}"))?;
     }
+    log_progress(&jwt, &results[0].topic).await
+        .map_err(|e| format!("Failed to log progress: {e}"))?;
 
     Ok(())
 }

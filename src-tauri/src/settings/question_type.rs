@@ -41,7 +41,15 @@ pub fn read_question_type(app_data_dir: String) -> Result<bool, String> {
     path.push("conf.json");
 
     if !path.exists() {
-        return Err("conf.json does not exist".to_string());
+        let default_conf = Conf { ai: false };
+
+        let json = serde_json::to_string_pretty(&default_conf)
+            .map_err(|e| format!("Failed to serialize default config: {}", e))?;
+
+        fs::write(&path, json)
+            .map_err(|e| format!("Failed to create conf.json: {}", e))?;
+
+        return Ok(false);
     }
 
     let content = fs::read_to_string(&path)
