@@ -5,5 +5,6 @@ use serde::{Deserialize, Serialize};
 pub struct SkillProgression {
     pub skill_name: String,
     pub progression: f64,
+    //pub recorded_at: String,
 }
 

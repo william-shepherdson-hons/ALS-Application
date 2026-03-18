@@ -18,6 +18,8 @@ use crate::details::{
 };
 use crate::progress::{
     fetch::handle_fetch_progression,
+    fetch::handle_fetch_historical_skills,
+    fetch::handle_fetch_skill_history,
     update::handle_update_progression
 };
 use crate::questions::{
@@ -50,7 +52,9 @@ pub fn run() {
             generate_assessment,
             grade_assessment,
             toggle_question_type,
-            read_question_type
+            read_question_type,
+            handle_fetch_historical_skills,
+            handle_fetch_skill_history
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
