@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 interface SkillProgression {
   skill_name: string;
   progression: number;
+  recorded_at: string;
 }
 
 export default function Progress() {
@@ -119,6 +120,7 @@ export default function Progress() {
             <tr>
               <th>Skill Name</th>
               <th>Progression</th>
+              <th>Recorded At</th>
             </tr>
           </thead>
           <tbody>
@@ -126,6 +128,7 @@ export default function Progress() {
               <tr key={idx}>
                 <td>{entry.skill_name}</td>
                 <td>{entry.progression.toFixed(2)}</td>
+                <td>{new Date(entry.recorded_at).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

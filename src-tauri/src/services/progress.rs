@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::structs::skill_progression::SkillProgression;
+use crate::structs::skill_progression::{SkillProgression, SkillProgressionWithDate};
 
 pub async fn get_progression(jwt_token: String) -> Result<Vec<SkillProgression>, String> {
     let client = reqwest::Client::new();
@@ -77,7 +77,7 @@ pub async fn get_historical_skills(jwt_token: &str) -> Result<Vec<String>, Strin
 pub async fn get_skill_history(
     jwt_token: &str,
     skill_name: &str
-) -> Result<Vec<SkillProgression>, String> {
+) -> Result<Vec<SkillProgressionWithDate>, String> {
     let client = reqwest::Client::new();
 
 
@@ -100,7 +100,7 @@ pub async fn get_skill_history(
 
     // consume here instead
     let history = res
-        .json::<Vec<SkillProgression>>()
+        .json::<Vec<SkillProgressionWithDate>>()
         .await
         .map_err(|e| e.to_string())?;
 
